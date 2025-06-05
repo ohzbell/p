@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=auto" />
+  <title>푸주옥+새싹인삼</title>
+  <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet" />
+  <style>
+    html {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      word-break: keep-all;
+      font-family: 'SUIT', sans-serif;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      position: relative;
+      background: #f4f4f4;
+    }
+    .logo {
+      padding: 14px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+      object-fit: contain;
+      z-index: 100;
+    }
+	
+
+    .section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 100dvh;
+      display: none;
+	  overflow-y: auto;
+      justify-content: center;
+      align-items: center;
+      background: #f6f6f6;
+	  background: url('bg.jpg') repeat;
+      background-size: auto;
+      padding:60px 0px;
+	  
+    }
+	#section4.section {	
+	  background: url('background.jpg') no-repeat center center;
+	  background-size: cover;
+	}
+    .section.active {
+      display: flex;
+      animation: fadeIn 0.5s ease-in-out;
+	  position: static;
+	  height:auto;
+    }
+    .section img, .video-wrapper img, .video-wrapper video {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .menu {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      z-index: 100;
+      border-top: 1px solid #ccc;
+      background: #fff;
+    }
+    .menu button {
+      flex: 1;
+      padding: 1rem 0;
+      border: none;
+      background: #3e7a47;
+      color: #dce3b6;
+      font-size: 1rem;
+      cursor: pointer;
+      border-right: 1px solid #4e8c55;
+	  font-weight:800;
+    }
+    .menu button.active {
+      color: #fff;
+    }
+    .menu button:last-child {
+      border-right: none;
+    }
+  </style>
+</head>
+<body>
+  <img class="logo" src="logo.png" alt="Logo" />
+
+  <div class="sections" style="position: relative; width: 100%; height: calc(100vh - 50px); overflow-y: auto;">
+    <div id="section1" class="section active" style="min-height: auto;">
+      <img src="image1.jpg" alt="Section 1 Image" />
+    </div>
+    <div id="section2" class="section" style="min-height: auto;">
+      <img src="image2.jpg" alt="Section 2 Image" />
+    </div>
+    <div id="section3" class="section" style="min-height: auto;">
+      <img src="image3.jpg" alt="Section 3 Image" />
+    </div>
+    <div id="section4" class="section">
+      <div class="video-wrapper" style="width: 90%; height: 100%; position: relative;">
+        <video id="mainVideo" autoplay muted loop src="main-video.mp4" controls playsinline style="width: 100%; height: 100%;"></video>
+        <img id="fallbackImage" src="video-fallback.jpg" alt="Video not supported"
+             style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+    </div>
+  </div>
+
+  <div class="menu">
+    <button class="active" data-target="section1">푸주옥 새싹삼</button>
+    <button data-target="section2">새싹삼 효능</button>
+    <button data-target="section3">드시는 법</button>
+    <button data-target="section4">푸주옥 소개</button>
+  </div>
+
+  <script>
+  const buttons = document.querySelectorAll('.menu button');
+  const sections = document.querySelectorAll('.section');
+  const video = document.getElementById('mainVideo');
+  const fallback = document.getElementById('fallbackImage');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-target');
+
+      // 메뉴 active 처리
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // 섹션 전환
+      sections.forEach(sec => {
+        const isVideoSection = sec.id === 'section4';
+        const isTargetSection = sec.id === target;
+
+        // 현재 active 제거
+        sec.classList.remove('active');
+
+        if (isTargetSection) {
+          sec.classList.add('active');
+
+          if (isVideoSection) {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        }
+      });
+    });
+  });
+
+  // 비디오 오류 시 fallback 이미지 표시
+  video.addEventListener('error', () => {
+    fallback.style.display = 'block';
+    video.style.display = 'none';
+  });
+</script>
+</body>
+</html>
